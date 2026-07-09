@@ -1,11 +1,13 @@
-const CACHE_NAME = "work-steps-pwa-v2";
+const CACHE_NAME = "work-steps-pwa-v5";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./offwork.html",
+  "./stats.html",
   "./style.css",
   "./app.js",
   "./offwork.js",
+  "./stats.js",
   "./sync.js",
   "./firebase-config.js",
   "./manifest.webmanifest",
