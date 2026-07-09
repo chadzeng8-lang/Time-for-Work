@@ -351,6 +351,135 @@ body {
   margin-top: 0;
 }
 
+.stats-summary {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.summary-card {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: var(--shadow);
+}
+
+.summary-card.work {
+  border-left: 4px solid var(--accent);
+}
+
+.summary-card.offwork {
+  border-left: 4px solid var(--mint);
+}
+
+.summary-card.diff {
+  border-left: 4px solid var(--sun);
+}
+
+.summary-label {
+  margin: 0;
+  color: var(--subtle);
+  font-size: 0.85rem;
+}
+
+.summary-value {
+  margin: 6px 0 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #2f3568;
+}
+
+.stats-block h2 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+  color: #2f3568;
+}
+
+.interval-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.interval-list li {
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+}
+
+.interval-list li:first-child {
+  border-top: 0;
+}
+
+.interval-route {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  color: #2f3568;
+}
+
+.interval-arrow {
+  color: var(--subtle);
+}
+
+.interval-meta {
+  margin-top: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.interval-time {
+  color: var(--subtle);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.interval-compare-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  text-align: right;
+}
+
+.interval-duration {
+  color: #3f2fff;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.interval-median {
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.interval-median.faster {
+  color: #0f9f75;
+}
+
+.interval-median.slower {
+  color: #e63f5d;
+}
+
+.interval-median.neutral {
+  color: var(--subtle);
+}
+
+.interval-empty {
+  color: var(--subtle);
+}
+
+.compare-highlight .record-time {
+  color: #e63f5d;
+}
+
 @media (min-width: 560px) {
   .actions {
     grid-template-columns: repeat(2, minmax(0, 1fr));
