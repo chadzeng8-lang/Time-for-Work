@@ -45,11 +45,6 @@ const TimeSync = {
     updateSyncStatusUI();
   },
 
-  clearSyncCode() {
-    localStorage.removeItem(SYNC_CODE_KEY);
-    updateSyncStatusUI();
-  },
-
   getStatus() {
     if (!this.isConfigured()) {
       return "disabled";
@@ -153,29 +148,78 @@ const TimeSync = {
     return merged;
   },
 
+  async listAllDates(mode, keyPrefix) {
+    appMode = mode;
+    storageKeyPrefix = keyPrefix;
+    const dates = new Set();
+
+    for (let i = 0; i < localStorage.length; i += 1) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith(keyPrefix) && !key.endsWith("-updated")) {
+        dates.add(key.slice(keyPrefix.length));
+      }
+    }
+
+    if (!this.isEnabled()) {
+      return [...dates].sort();
+    }
+
+    try {
+      const syncId = await hashSyncCode(localStorage.getItem(SYNC_CODE_KEY));
+      const snapshot = await db
+        .collection("sync")
+        .doc(syncId)
+        .collection("data")
+        .get();
+      const docPrefix = `${mode}_`;
+
+      snapshot.forEach((doc) => {
+        if (doc.id.startsWith(docPrefix)) {
+          dates.add(doc.id.slice(docPrefix.length));
+        }
+      });
+    } catch (error) {
+      console.error("读取历史日期失败：", error);
+    }
+
+    return [...dates].sort();
+  },
+
   async uploadAllLocalRecords() {
     if (!this.isEnabled()) {
       return;
     }
 
-    const prefix = storageKeyPrefix;
-    const dates = [];
+    const savedMode = appMode;
+    const savedPrefix = storageKeyPrefix;
+    const modes = [
+      { mode: "work", prefix: "work-steps-records-" },
+      { mode: "offwork", prefix: "offwork-steps-records-" },
+    ];
 
-    for (let i = 0; i < localStorage.length; i += 1) {
-      const key = localStorage.key(i);
-      if (key && key.startsWith(prefix) && !key.endsWith("-updated")) {
-        dates.push(key.slice(prefix.length));
+    for (const { mode, prefix } of modes) {
+      appMode = mode;
+      storageKeyPrefix = prefix;
+
+      for (let i = 0; i < localStorage.length; i += 1) {
+        const key = localStorage.key(i);
+        if (!key || !key.startsWith(prefix) || key.endsWith("-updated")) {
+          continue;
+        }
+
+        const dateKey = key.slice(prefix.length);
+        const records = loadLocalRecords(dateKey);
+        if (Object.keys(records).length === 0) {
+          continue;
+        }
+
+        const updatedAt = getLocalUpdatedAt(dateKey) || new Date().toISOString();
+        await writeCloudDoc(dateKey, records, updatedAt);
       }
     }
 
-    for (const dateKey of dates) {
-      const records = loadLocalRecords(dateKey);
-      if (Object.keys(records).length === 0) {
-        continue;
-      }
-      const updatedAt = getLocalUpdatedAt(dateKey) || new Date().toISOString();
-      await writeCloudDoc(dateKey, records, updatedAt);
-    }
+    appMode = savedMode;
+    storageKeyPrefix = savedPrefix;
   },
 };
 
@@ -344,3 +388,11 @@ function setupSyncUI() {
 }
 
 document.addEventListener("DOMContentLoaded", setupSyncUI);
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch((error) => {
+      console.error("Service Worker 注册失败：", error);
+    });
+  });
+}
