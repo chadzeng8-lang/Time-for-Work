@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#2563eb" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="时间统计" />
+  <title>时间间隔统计</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="app-header">
+      <nav class="mode-nav" aria-label="记录模式切换">
+        <a class="mode-link" href="./index.html">上班</a>
+        <a class="mode-link" href="./offwork.html">下班</a>
+        <a class="mode-link active" href="./stats.html">统计</a>
+      </nav>
+      <h1>时间间隔统计</h1>
+      <p id="todayLabel" class="today-label"></p>
+      <div class="date-controls">
+        <label class="date-label" for="datePicker">查看日期</label>
+        <input id="datePicker" class="date-picker" type="date" />
+        <button id="goTodayBtn" class="go-today-btn" type="button">今天</button>
+      </div>
+    </header>
+
+    <section class="stats-summary" id="summaryCards"></section>
+
+    <section class="records stats-block">
+      <h2>上班 · 相邻步骤间隔</h2>
+      <ul id="workIntervals" class="interval-list"></ul>
+    </section>
+
+    <section class="records stats-block">
+      <h2>下班 · 相邻步骤间隔</h2>
+      <ul id="offworkIntervals" class="interval-list"></ul>
+    </section>
+
+    <section class="records stats-block">
+      <h2>两组总耗时对比</h2>
+      <ul id="compareList" class="interval-list"></ul>
+    </section>
+  </main>
+
+  <script src="./firebase-config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="./sync.js"></script>
+  <script src="./stats.js"></script>
+</body>
+</html>
