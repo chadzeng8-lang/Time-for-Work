@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#2563eb" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="下班打卡" />
+  <title>下班时间记录</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="app-header">
+      <nav class="mode-nav" aria-label="记录模式切换">
+        <a class="mode-link" href="./index.html">上班记录</a>
+        <a class="mode-link active" href="./offwork.html">下班记录</a>
+      </nav>
+      <h1>下班步骤打卡</h1>
+      <p id="todayLabel" class="today-label"></p>
+      <div class="date-controls">
+        <label class="date-label" for="datePicker">查看日期</label>
+        <input id="datePicker" class="date-picker" type="date" />
+        <button id="goTodayBtn" class="go-today-btn" type="button">回到今天</button>
+      </div>
+      <div class="sync-controls">
+        <span id="syncStatus" class="sync-status" data-status="disabled">同步未配置</span>
+        <button id="syncSettingsBtn" class="sync-btn" type="button">同步设置</button>
+        <button id="syncPullBtn" class="sync-btn" type="button">拉取云端</button>
+      </div>
+    </header>
+
+    <section class="actions" id="actions"></section>
+
+    <section class="records">
+      <div class="records-head">
+        <h2>今日记录</h2>
+        <button id="resetBtn" class="reset-btn" type="button">清空今天</button>
+      </div>
+      <ul id="recordsList" class="records-list"></ul>
+    </section>
+  </main>
+
+  <div id="syncModal" class="method-modal" hidden>
+    <div id="syncBackdrop" class="method-backdrop"></div>
+    <section class="method-sheet sync-sheet" role="dialog" aria-modal="true" aria-labelledby="syncTitle">
+      <h3 id="syncTitle">跨设备同步</h3>
+      <p class="sync-hint">在每台设备输入相同同步码，即可共享打卡记录。</p>
+      <input id="syncCodeInput" class="sync-code-input" type="password" placeholder="至少 6 位同步码" autocomplete="off" />
+      <div class="method-actions">
+        <button id="syncSaveBtn" class="method-btn bike" type="button">保存</button>
+        <button id="syncCancelBtn" class="method-cancel-btn inline-cancel" type="button">取消</button>
+      </div>
+    </section>
+  </div>
+
+  <template id="actionButtonTemplate">
+    <button class="action-btn" type="button">
+      <span class="name"></span>
+      <span class="time"></span>
+    </button>
+  </template>
+
+  <script src="./firebase-config.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="./sync.js"></script>
+  <script src="./offwork.js"></script>
+</body>
+</html>
