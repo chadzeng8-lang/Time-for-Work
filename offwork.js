@@ -141,30 +141,11 @@ function renderRecordsList() {
 }
 
 async function loadRecords(dateKey) {
-  if (TimeSync.isConfigured()) {
-    return TimeSync.loadRecords(dateKey);
-  }
-
-  try {
-    const raw = localStorage.getItem(getStorageKey(dateKey));
-    if (!raw) {
-      return {};
-    }
-    const parsed = JSON.parse(raw);
-    return typeof parsed === "object" && parsed !== null ? parsed : {};
-  } catch (error) {
-    console.error("读取记录失败：", error);
-    return {};
-  }
+  return TimeSync.loadRecords(dateKey);
 }
 
 async function saveRecords(dateKey, records) {
-  if (TimeSync.isConfigured()) {
-    await TimeSync.saveRecords(dateKey, records);
-    return;
-  }
-
-  localStorage.setItem(getStorageKey(dateKey), JSON.stringify(records));
+  await TimeSync.saveRecords(dateKey, records);
 }
 
 function formatTime(date) {
@@ -186,10 +167,6 @@ function formatDateLabel(dateKey) {
   return dateKey.replaceAll("-", "/");
 }
 
-function getStorageKey(dateKey) {
-  return `${STORAGE_KEY_PREFIX}${dateKey}`;
-}
-
 function syncDateUI() {
   const isToday = selectedDate === today;
 
@@ -203,11 +180,3 @@ function syncDateUI() {
 }
 
 init();
-
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js").catch((error) => {
-      console.error("Service Worker 注册失败：", error);
-    });
-  });
-}
